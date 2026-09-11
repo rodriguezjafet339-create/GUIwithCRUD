@@ -3,7 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package guiwithcrud;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author jafet
@@ -11,12 +18,17 @@ package guiwithcrud;
 public class StudentsTable extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(StudentsTable.class.getName());
-
+    private DefaultTableModel model;
+    private int selectedRow = -1;
     /**
      * Creates new form StudentsTable
      */
     public StudentsTable() {
         initComponents();
+        
+        model = (DefaultTableModel)jTable1.getModel();
+        model.setRowCount(0);
+        loadData();
     }
 
     /**
@@ -29,40 +41,49 @@ public class StudentsTable extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        lnTextField = new javax.swing.JTextField();
+        fnTextField = new javax.swing.JTextField();
+        saveButton = new javax.swing.JButton();
+        clearButton = new javax.swing.JButton();
+        updateButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
+        clearButton2 = new javax.swing.JButton();
         label1 = new java.awt.Label();
         label2 = new java.awt.Label();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 204, 255));
 
         jPanel1.setBackground(new java.awt.Color(255, 204, 204));
 
-        jTextField1.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
-        jTextField1.setText("LastName");
+        lnTextField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        lnTextField.addActionListener(this::lnTextFieldActionPerformed);
 
-        jTextField2.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
-        jTextField2.setText("FirstName");
-        jTextField2.addActionListener(this::jTextField2ActionPerformed);
+        fnTextField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        fnTextField.addActionListener(this::fnTextFieldActionPerformed);
 
-        jButton1.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        jButton1.setText("Save");
+        saveButton.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        saveButton.setText("Save");
+        saveButton.addActionListener(this::saveButtonClicked);
 
-        jButton2.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        jButton2.setText("Clear");
+        clearButton.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        clearButton.setText("Clear");
+        clearButton.addActionListener(this::clearButtonClicked);
 
-        jButton3.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        jButton3.setText("Update");
+        updateButton.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        updateButton.setText("Update");
+        updateButton.addActionListener(this::updateButtonClicked);
 
-        jButton4.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        jButton4.setText("Delete");
+        deleteButton.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        deleteButton.setText("Delete");
+        deleteButton.addActionListener(this::deleteButtonClicked);
+
+        clearButton2.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        clearButton2.setText("Clear");
+        clearButton2.addActionListener(this::clearButton2ActionPerformed);
 
         label1.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         label1.setText("Last name");
@@ -130,7 +151,16 @@ public class StudentsTable extends javax.swing.JFrame {
                 "First name", "Last name"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                studentsTableActionPerfomed(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable1);
+
+        jButton1.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        jButton1.setText("Delete All");
+        jButton1.addActionListener(this::deleteAllActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -139,45 +169,52 @@ public class StudentsTable extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(saveButton)
+                            .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(26, 26, 26)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField2)
-                                    .addComponent(jTextField1)))
+                                    .addComponent(fnTextField)
+                                    .addComponent(lnTextField))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(clearButton2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(clearButton, javax.swing.GroupLayout.Alignment.TRAILING)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(72, 72, 72)
-                                .addComponent(jButton3)
-                                .addGap(69, 69, 69)
-                                .addComponent(jButton4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
-                                .addComponent(jButton2)))))
-                .addGap(32, 32, 32))
+                                .addGap(47, 47, 47)
+                                .addComponent(updateButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(deleteButton)
+                                .addGap(67, 67, 67)
+                                .addComponent(jButton1)))))
+                .addGap(29, 29, 29))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(clearButton)
+                        .addComponent(fnTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(clearButton2)
+                        .addComponent(lnTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(deleteButton)
+                    .addComponent(updateButton)
+                    .addComponent(saveButton)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31))
@@ -197,10 +234,204 @@ public class StudentsTable extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void fnTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fnTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_fnTextFieldActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        if (selectedRow == -1){
+        JOptionPane.showMessageDialog(this, "Select a row first.");
+        return;
+        }
+        
+        String last = lnTextField.getText().trim();
+        String first = fnTextField.getText().trim();
+        
+        if (last.isEmpty()||first.isEmpty()){
+        JOptionPane.showMessageDialog(this, "Both fields are required");
+        return;
+        }
+        
+        model.setValueAt(first,selectedRow, 0);
+        model.setValueAt(last,selectedRow, 1);
+        
+        clearFields();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        if (selectedRow == -1){
+        JOptionPane.showMessageDialog(this,"Select a row first.");
+        return;
+        }
+        
+        model.removeRow(selectedRow);
+        clearFields();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+       clearFields();
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int row = jTable1.getSelectedRow();
+        
+        if (row >= 0){
+        selectedRow = row;
+                
+        fnTextField.setText(model.getValueAt(row, 0).toString());
+        lnTextField.setText(model.getValueAt(row, 1).toString());
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void saveButtonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonClicked
+        // TODO add your handling code here:
+        String last = lnTextField.getText().trim();
+        String first = fnTextField.getText().trim();
+        
+        if (last.isEmpty()|| first.isEmpty()){
+        JOptionPane.showMessageDialog(this,"Both fields are required.");
+        return;
+        
+        }
+        
+       model.addRow(new Object[]{first,last});
+       
+       clearFields();
+       saveData();
+    }//GEN-LAST:event_saveButtonClicked
+
+    private void updateButtonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonClicked
+        // TODO add your handling code here:
+        if (selectedRow == -1){
+        JOptionPane.showMessageDialog(this, "Select a row first.");
+        return;
+        }
+        
+        String last = lnTextField.getText().trim();
+        String first = fnTextField.getText().trim();
+        
+        if (last.isEmpty()||first.isEmpty()){
+        JOptionPane.showMessageDialog(this, "Both fields are required");
+        return;
+        }
+        
+        model.setValueAt(first,selectedRow, 0);
+        model.setValueAt(last,selectedRow, 1);
+        
+        clearFields();
+        saveData();
+    }//GEN-LAST:event_updateButtonClicked
+
+    private void deleteButtonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonClicked
+        // TODO add your handling code here:
+        if (selectedRow == -1){
+        JOptionPane.showMessageDialog(this,"Select a row first.");
+        return;
+        }
+        
+        model.removeRow(selectedRow);
+        clearFields();
+        saveData();
+        
+    }//GEN-LAST:event_deleteButtonClicked
+
+    private void clearButtonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonClicked
+        // TODO add your handling code here:
+        fnTextField.setText("");
+    }//GEN-LAST:event_clearButtonClicked
+
+    private void lnTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lnTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lnTextFieldActionPerformed
+
+    private void studentsTableActionPerfomed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_studentsTableActionPerfomed
+        // TODO add your handling code here:
+        int row = jTable1.getSelectedRow();
+        
+        if (row >= 0){
+        selectedRow = row;
+                
+        fnTextField.setText(model.getValueAt(row, 0).toString());
+        lnTextField.setText(model.getValueAt(row, 1).toString());
+        }
+    }//GEN-LAST:event_studentsTableActionPerfomed
+
+    private void clearButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButton2ActionPerformed
+        // TODO add your handling code here:
+        lnTextField.setText("");
+    }//GEN-LAST:event_clearButton2ActionPerformed
+
+    private void deleteAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAllActionPerformed
+        // TODO add your handling code here:
+        if (model.getRowCount () == 0){
+             JOptionPane.showMessageDialog(this,"Table is already empty");
+                return;
+        };
+        
+        int choice = JOptionPane.showConfirmDialog(
+        this,
+        "Are you sure",
+        "Confirm",
+        JOptionPane.YES_NO_OPTION
+                        );
+
+        if (choice == JOptionPane.YES_OPTION) {
+        while (model.getRowCount() > 0) {
+                model.removeRow(0);
+                 }
+        saveData();
+        } else if (choice == JOptionPane.NO_OPTION) {
+        
+        }
+    }//GEN-LAST:event_deleteAllActionPerformed
+  private void clearFields(){
+  fnTextField.setText("");
+  lnTextField.setText("");
+  selectedRow = -1;
+  jTable1.clearSelection();
+  
+  }
+  
+  private static final String DATA_FILE = "students.txt";
+
+private void loadData() {
+    File file = new File(DATA_FILE);
+    if (!file.exists()) return;
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",", -1);
+            if (parts.length == 2) {
+                model.addRow(new Object[]{parts[0], parts[1]});
+            }
+        }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Could not load saved data: " + e.getMessage());
+    }
+}
+
+private void saveData() {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(DATA_FILE))) {
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String first = model.getValueAt(i, 0).toString();
+            String last = model.getValueAt(i, 1).toString();
+            writer.write(first + "," + last);
+            writer.newLine();
+        }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Could not save data: " + e.getMessage());
+    }
+}
     /**
      * @param args the command line arguments
      */
@@ -227,16 +458,18 @@ public class StudentsTable extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton clearButton;
+    private javax.swing.JButton clearButton2;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JTextField fnTextField;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private java.awt.Label label1;
     private java.awt.Label label2;
+    private javax.swing.JTextField lnTextField;
+    private javax.swing.JButton saveButton;
+    private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 }
