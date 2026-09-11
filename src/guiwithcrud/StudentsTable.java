@@ -11,19 +11,12 @@ package guiwithcrud;
 public class StudentsTable extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(StudentsTable.class.getName());
-private DefaultTableModle Model;
-private int selecteRow = -1;
 
-private void initTableMOdel(){
-   model = new DefaultTableModel(new object[]("Both filds are required."));
-   jTable1.setModel(model);
-}
     /**
      * Creates new form StudentsTable
      */
     public StudentsTable() {
         initComponents();
-     
     }
 
     /**
@@ -36,12 +29,12 @@ private void initTableMOdel(){
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        lastname = new javax.swing.JTextField();
-        firstname = new javax.swing.JTextField();
-        save = new javax.swing.JButton();
-        clear = new javax.swing.JButton();
-        update = new javax.swing.JButton();
-        delete = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         label1 = new java.awt.Label();
         label2 = new java.awt.Label();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -52,24 +45,24 @@ private void initTableMOdel(){
 
         jPanel1.setBackground(new java.awt.Color(255, 204, 204));
 
-        lastname.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
-        lastname.setText("LastName");
+        jTextField1.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        jTextField1.setText("LastName");
 
-        firstname.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
-        firstname.setText("FirstName");
-        firstname.addActionListener(this::firstnameActionPerformed);
+        jTextField2.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        jTextField2.setText("FirstName");
+        jTextField2.addActionListener(this::jTextField2ActionPerformed);
 
-        save.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        save.setText("Save");
+        jButton1.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        jButton1.setText("Save");
 
-        clear.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        clear.setText("Clear");
+        jButton2.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        jButton2.setText("Clear");
 
-        update.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        update.setText("Update");
+        jButton3.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        jButton3.setText("Update");
 
-        delete.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        delete.setText("Delete");
+        jButton4.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        jButton4.setText("Delete");
 
         label1.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         label1.setText("Last name");
@@ -77,7 +70,6 @@ private void initTableMOdel(){
         label2.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         label2.setText("First name");
 
-        jScrollPane2.setToolTipText(COURIER NEW);
         jScrollPane2.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
 
         jTable1.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
@@ -139,7 +131,6 @@ private void initTableMOdel(){
             }
         ));
         jScrollPane2.setViewportView(jTable1);
-        jTable1.setColumnModel(2);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -151,7 +142,7 @@ private void initTableMOdel(){
                     .addComponent(jScrollPane2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(save)
+                            .addComponent(jButton1)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -159,15 +150,15 @@ private void initTableMOdel(){
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(26, 26, 26)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(firstname)
-                                    .addComponent(lastname)))
+                                    .addComponent(jTextField2)
+                                    .addComponent(jTextField1)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(72, 72, 72)
-                                .addComponent(update)
+                                .addComponent(jButton3)
                                 .addGap(69, 69, 69)
-                                .addComponent(delete)
+                                .addComponent(jButton4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
-                                .addComponent(clear)))))
+                                .addComponent(jButton2)))))
                 .addGap(32, 32, 32))
         );
         jPanel1Layout.setVerticalGroup(
@@ -175,18 +166,18 @@ private void initTableMOdel(){
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lastname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(firstname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(save)
-                    .addComponent(clear)
-                    .addComponent(update)
-                    .addComponent(delete))
+                    .addComponent(jButton1)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31))
@@ -206,12 +197,9 @@ private void initTableMOdel(){
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-        
-    private void firstnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstnameActionPerformed
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
-      String last = firstname.getText().trim();
-      
-    }//GEN-LAST:event_firstnameActionPerformed
+    }//GEN-LAST:event_jTextField2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -233,22 +221,22 @@ private void initTableMOdel(){
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-   
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new StudentsTable().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton clear;
-    private javax.swing.JButton delete;
-    private javax.swing.JTextField firstname;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private java.awt.Label label1;
     private java.awt.Label label2;
-    private javax.swing.JTextField lastname;
-    private javax.swing.JButton save;
-    private javax.swing.JButton update;
     // End of variables declaration//GEN-END:variables
 }
